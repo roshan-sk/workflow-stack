@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manager Approval Needed</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 30px;
+        text-align: left;
+    }
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    h4 {
+        color: #555;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 16px;
+        color: #444;
+        margin: 5px 0;
+    }
+    .button {
+        display: inline-block;
+        padding: 12px 25px;
+        margin: 10px 5px 0 0;
+        font-size: 16px;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+    .approve {
+        background-color: #4CAF50;
+    }
+    .approve:hover {
+        background-color: #45a049;
+    }
+    .reject {
+        background-color: #f44336;
+    }
+    .reject:hover {
+        background-color: #da2c2c;
+    }
+    .details {
+        border-top: 1px solid #e0e0e0;
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Manager Approval Needed</h2>
+        <h4>Purchase Request Details</h4>
+        <div class="details">
+            <p><strong>Requestor:</strong> {{Requestor}}</p>
+            <p><strong>Item:</strong> {{Item}}</p>
+            <p><strong>Price:</strong> {{Price}}</p>
+            <p><strong>Description:</strong> {{Description}}</p>
+        </div>
+        <div style="text-align:center; margin-top:25px;">
+            <a href="{{ApproveUrl}}" class="button approve">Approve</a>
+            <a href="{{RejectUrl}}" class="button reject">Reject</a>
+        </div>
+    </div>
+</body>
+</html>

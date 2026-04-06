@@ -1,0 +1,17 @@
+# Build outputs
+bin/
+obj/
+
+# VS
+.vs/
+.vscode/
+
+# User files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# NuGet
+packages/

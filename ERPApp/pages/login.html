@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <div id="errorMsg" class="error-message"></div>
+
+    <input id="email" placeholder="Email"/>
+    <input id="password" type="password" placeholder="Password"/>
+
+    <button id="loginBtn" onclick="login()">Login</button>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get('requestId');
+    const type = params.get('type');
+    const role = params.get('role');
+
+    async function login() {
+        const btn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('errorMsg');
+
+        errorDiv.style.display = 'none';
+        btn.disabled = true;
+        btn.innerText = 'Logging in...';
+
+        const res = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            })
+        });
+
+        if (!res.ok) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = res.status === 401
+                ? 'Incorrect email or password.'
+                : 'Login failed.';
+            btn.disabled = false;
+            btn.innerText = 'Login';
+            return;
+        }
+
+        const data = await res.json();
+        const token = data.token;
+
+        localStorage.setItem('token', token);
+
+        if (requestId && type && role) {
+            const res2 = await fetch(`/${role}/${type}/${requestId}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            const text = await res2.text();
+
+            if (res2.ok) {
+                document.body.innerHTML = text;
+            } else {
+                document.body.innerHTML = `<h2>Error</h2><pre>${text}</pre>`;
+            }
+        } else {
+            window.location.href = '/request';
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Request</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        .required::after {
+            content: '*';
+            color: red;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Purchase Request</h2>
+
+    <label class="required">Requestor Name</label>
+    <input id="requestor" placeholder="Requestor Name"/>
+
+    <label class="required">Item Name</label>
+    <input id="item" placeholder="Item Name"/>
+
+    <label class="required">Price</label>
+    <input id="price" type="number" placeholder="Price"/>
+
+    <label>Description (optional)</label>
+    <textarea id="description" placeholder="Description"></textarea>
+
+    <button id="submitBtn" onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+async function submitForm() {
+    const btn = document.getElementById('submitBtn');
+
+    btn.disabled = true;
+    btn.innerText = 'Submitting...';
+
+    const requestor = document.getElementById('requestor').value.trim();
+    const item = document.getElementById('item').value.trim();
+    const price = document.getElementById('price').value.trim();
+
+    if (!requestor || !item || !price) {
+        alert('Please fill in all required fields.');
+        btn.disabled = false;
+        btn.innerText = 'Submit';
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+
+    const formData = new FormData();
+    formData.append('requestor', requestor);
+    formData.append('item', item);
+    formData.append('price', price);
+    formData.append('description', document.getElementById('description').value.trim());
+
+    const res = await fetch('/start', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        },
+        body: formData
+    });
+
+    if (res.status === 401) {
+        alert('Unauthorized! Please login again.');
+        window.location.href = '/login-page';
+        return;
+    }
+
+    const html = await res.text();
+    document.body.innerHTML = html;
+
+    btn.disabled = false;
+    btn.innerText = 'Submit';
+}
+</script>
+
+</body>
+</html>

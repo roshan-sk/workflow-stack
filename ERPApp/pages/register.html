@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Register</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3e8e41;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class='container'>
+    <h2>Register</h2>
+
+    <input id='username' placeholder='Username'/>
+    <input id='email' placeholder='Email'/>
+    <input id='password' type='password' placeholder='Password'/>
+
+    <button onclick='register()'>Register</button>
+
+    <div style='margin-top:15px;'>
+        Already have an account?
+        <a href='/login-page' style='color:#4A90E2; text-decoration:none;'>Login here</a>
+    </div>
+</div>
+
+<script>
+async function register() {
+    const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        })
+    });
+
+    if (res.ok) {
+        window.location.href = '/login-page';
+    } else {
+        alert(await res.text());
+    }
+}
+</script>
+
+</body>
+</html>
